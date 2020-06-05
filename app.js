@@ -1,11 +1,14 @@
 const Discord = require("discord.js");
 const client = new Discord.Client({partials: ["MESSAGE", "REACTION", "CHANNEL"]});
+const config = require('./config');
 const Enmap = require("enmap");
 const fs = require("fs");
 
-client.config = require('./database/models/config');
 client.commands = new Enmap();
-client.models = {};
+client.config = config;
+client.models = {
+  config: require('./database/models/config')
+};
 
 fs.readdir("./events/", (err, files) => {
   if (err) return console.error(err);
