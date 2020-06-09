@@ -1,3 +1,7 @@
 require(`../database/connect`);
 
-module.exports = async(client) => {}
+module.exports = async(client) => {
+    console.log(`---------------------------
+    On
+---------------------------`)
+}

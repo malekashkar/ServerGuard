@@ -7,7 +7,12 @@ const fs = require("fs");
 client.commands = new Enmap();
 client.config = config;
 client.models = {
-  config: require('./database/models/config')
+  config: require('./database/models/config'),
+  autorole: require('./database/models/autorole'),
+  premium: require('./database/models/premium'),
+  mentionspam: require('./database/models/mentionspam'),
+  tempban: require('./database/models/tempban'),
+  tempmute: require('./database/models/tempmute'),
 };
 
 fs.readdir("./events/", (err, files) => {
