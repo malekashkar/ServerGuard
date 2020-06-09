@@ -1,9 +1,10 @@
-const embeds = require("../utils/embed")
+const Discord = require("discord.js");
+const embeds = require("../utils/embed");
 const ms = require("ms");
 
 exports.run = async(client, message, args) => {
     let premiumData = client.models.premium.findById(message.guild.id);
-    let options = [`mentions`, `spam`];
+    let options = [`massmention`, `repeatedmsg`];
 
     if(args[0] === options[0]) {
         
@@ -39,6 +40,8 @@ exports.run = async(client, message, args) => {
                             let action = m.content;
                             let tempmutetime;
 
+                            if(action !== `tm`) tempmutetime = 0;
+
                             if(action === `tm`) {
                                 let fifth = await message.channel.send(embeds.question(`How long should the tempmute last?`, `Please provide a time in between **1m and 24h.**`));
                                 let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ms(m.content) >= 60000 && ms(m.content) <= 24 * 60 * 60 * 1000, { max: 1 });
@@ -47,10 +50,13 @@ exports.run = async(client, message, args) => {
                                     tempmutetime = m.content;
 
                                     let sixth = await message.channel.send(embeds.question(`Would you want the bot to ping a role when the action has occurred?`, `Tag a role if you do, reply with "no" if you don't.`));
-                                    let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id, { max: 1 });
+                                    let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && m.mentions.roles.first() || m.content === "no", { max: 1 });
                                     collector.on('collect', async m => {
                                         sixth.delete(); m.delete();
-                                        let ping = m.content;
+                                        
+                                        let ping;
+                                        if(m.mentions.roles.first()) ping = m.mentions.roles.first();
+                                        else ping = "none";
         
                                         let mentionSpam = await client.models.mentionspam.findById(message.guild.id);
         
@@ -61,16 +67,40 @@ exports.run = async(client, message, args) => {
                                                 amount: amount,
                                                 time: ms(time),
                                                 outcome: action,
-                                                ping: ping
+                                                ping: ping,
+                                                tm: tempmutetime
                                             });
+
+                                        let complete = new Discord.MessageEmbed()
+                                        .setTitle(`Complete`)
+                                        .setColor(client.config.color)
+                                        .setDescription(`Mass mention setup created.`)
+                                        .addField(`Type`, `User Mentions`, true)
+                                        .addField(`Amount of Messages`, amount, true)
+                                        .addField(`Time between messages`, time, true)
+                                        .addField(`Action on messages`, action, true)
+                                        .addField(`Ping a role`, ping, true)
+                                        message.channel.send(complete);
                                         } else {
                                             mentionSpam._id = message.guild.id;
                                             mentionSpam.type = `user`;
-                                            mentionnSpam.amount = amount;
-                                            mentionnSpam.time = ms(time);
-                                            mentionnSpam.outcome = action;
-                                            mentionnSpam.ping = ping;
-                                            mentionnSpam.save();
+                                            mentionSpam.amount = amount;
+                                            mentionSpam.time = ms(time);
+                                            mentionSpam.outcome = action;
+                                            mentionSpam.ping = ping;
+                                            mentionSpam.tm = tempmutetime;
+                                            mentionSpam.save();
+
+                                        let complete = new Discord.MessageEmbed()
+                                        .setTitle(`Complete`)
+                                        .setColor(client.config.color)
+                                        .setDescription(`Mass mention setup updated.`)
+                                        .addField(`Type`, `User Mentions`, true)
+                                        .addField(`Amount of Messages`, amount, true)
+                                        .addField(`Time between messages`, time, true)
+                                        .addField(`Action on messages`, action, true)
+                                        .addField(`Ping a role`, ping, true)
+                                        message.channel.send(complete);
                                         }
                                     });
                                 });
@@ -79,7 +109,10 @@ exports.run = async(client, message, args) => {
                                 let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && [], { max: 1 });
                                 collector.on('collect', async m => {
                                     sixth.delete(); m.delete();
-                                    let ping = m.content;
+                                    
+                                    let ping;
+                                    if(m.mentions.roles.first()) ping = m.mentions.roles.first();
+                                    else ping = "none";
     
                                     let mentionSpam = await client.models.mentionspam.findById(message.guild.id);
     
@@ -90,16 +123,40 @@ exports.run = async(client, message, args) => {
                                             amount: amount,
                                             time: ms(time),
                                             outcome: action,
-                                            ping: ping
+                                            ping: ping,
+                                            tm: tempmutetime
                                         });
+
+                                    let complete = new Discord.MessageEmbed()
+                                    .setTitle(`Complete`)
+                                    .setColor(client.config.color)
+                                    .setDescription(`Mass mention setup created.`)
+                                    .addField(`Type`, `User Mentions`, true)
+                                    .addField(`Amount of Messages`, amount, true)
+                                    .addField(`Time between messages`, time, true)
+                                    .addField(`Action on messages`, action, true)
+                                    .addField(`Ping a role`, ping, true)
+                                    message.channel.send(complete);
                                     } else {
                                         mentionSpam._id = message.guild.id;
                                         mentionSpam.type = `user`;
-                                        mentionnSpam.amount = amount;
-                                        mentionnSpam.time = ms(time);
-                                        mentionnSpam.outcome = action;
-                                        mentionnSpam.ping = ping;
-                                        mentionnSpam.save();
+                                        mentionSpam.amount = amount;
+                                        mentionSpam.time = ms(time);
+                                        mentionSpam.outcome = action;
+                                        mentionSpam.ping = ping;
+                                        mentionSpam.tm = tempmutetime;
+                                        mentionSpam.save();
+
+                                    let complete = new Discord.MessageEmbed()
+                                    .setTitle(`Complete`)
+                                    .setColor(client.config.color)
+                                    .setDescription(`Mass mention setup updated.`)
+                                    .addField(`Type`, `User Mentions`, true)
+                                    .addField(`Amount of Messages`, amount, true)
+                                    .addField(`Time between messages`, time, true)
+                                    .addField(`Action on messages`, action, true)
+                                    .addField(`Ping a role`, ping, true)
+                                    message.channel.send(complete);
                                     }
                                 });
                             }
@@ -132,6 +189,8 @@ exports.run = async(client, message, args) => {
                             let action = m.content;
                             let tempmutetime;
 
+                            if(action !== `tm`) tempmutetime = 0;
+
                             if(action === `tm`) {
                                 let fifth = await message.channel.send(embeds.question(`How long should the tempmute last?`, `Please provide a time in between **1m and 24h.**`));
                                 let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ms(m.content) >= 60000 && ms(m.content) <= 24 * 60 * 60 * 1000, { max: 1 });
@@ -140,10 +199,13 @@ exports.run = async(client, message, args) => {
                                     tempmutetime = m.content;
 
                                     let sixth = await message.channel.send(embeds.question(`Would you want the bot to ping a role when the action has occurred?`, `Tag a role if you do, reply with "no" if you don't.`));
-                                    let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id, { max: 1 });
+                                    let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && m.mentions.roles.first() || m.content === "no", { max: 1 });
                                     collector.on('collect', async m => {
                                         sixth.delete(); m.delete();
-                                        let ping = m.content;
+                                        
+                                        let ping;
+                                        if(m.mentions.roles.first()) ping = m.mentions.roles.first();
+                                        else ping = "none";
         
                                         let mentionSpam = await client.models.mentionspam.findById(message.guild.id);
         
@@ -154,16 +216,40 @@ exports.run = async(client, message, args) => {
                                                 amount: amount,
                                                 time: ms(time),
                                                 outcome: action,
-                                                ping: ping
+                                                ping: ping,
+                                                tm: tempmutetime
                                             });
+
+                                        let complete = new Discord.MessageEmbed()
+                                        .setTitle(`Complete`)
+                                        .setColor(client.config.color)
+                                        .setDescription(`Mass mention setup created.`)
+                                        .addField(`Type`, `Role Mentions`, true)
+                                        .addField(`Amount of Messages`, amount, true)
+                                        .addField(`Time between messages`, time, true)
+                                        .addField(`Action on messages`, action, true)
+                                        .addField(`Ping a role`, ping, true)
+                                        message.channel.send(complete);
                                         } else {
                                             mentionSpam._id = message.guild.id;
                                             mentionSpam.type = `role`;
-                                            mentionnSpam.amount = amount;
-                                            mentionnSpam.time = ms(time);
-                                            mentionnSpam.outcome = action;
-                                            mentionnSpam.ping = ping;
-                                            mentionnSpam.save();
+                                            mentionSpam.amount = amount;
+                                            mentionSpam.time = ms(time);
+                                            mentionSpam.outcome = action;
+                                            mentionSpam.ping = ping;
+                                            mentionSpam.tm = tempmutetime;
+                                            mentionSpam.save();
+
+                                        let complete = new Discord.MessageEmbed()
+                                        .setTitle(`Complete`)
+                                        .setColor(client.config.color)
+                                        .setDescription(`Mass mention setup updated.`)
+                                        .addField(`Type`, `Role Mentions`, true)
+                                        .addField(`Amount of Messages`, amount, true)
+                                        .addField(`Time between messages`, time, true)
+                                        .addField(`Action on messages`, action, true)
+                                        .addField(`Ping a role`, ping, true)
+                                        message.channel.send(complete);
                                         }
                                     });
                                 });
@@ -172,7 +258,10 @@ exports.run = async(client, message, args) => {
                                 let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && [], { max: 1 });
                                 collector.on('collect', async m => {
                                     sixth.delete(); m.delete();
-                                    let ping = m.content;
+                                    
+                                    let ping;
+                                    if(m.mentions.roles.first()) ping = m.mentions.roles.first();
+                                    else ping = "none";
     
                                     let mentionSpam = await client.models.mentionspam.findById(message.guild.id);
     
@@ -183,16 +272,40 @@ exports.run = async(client, message, args) => {
                                             amount: amount,
                                             time: ms(time),
                                             outcome: action,
-                                            ping: ping
+                                            ping: ping,
+                                            tm: tempmutetime
                                         });
+
+                                    let complete = new Discord.MessageEmbed()
+                                    .setTitle(`Complete`)
+                                    .setColor(client.config.color)
+                                    .setDescription(`Mass mention setup created.`)
+                                    .addField(`Type`, `Role Mentions`, true)
+                                    .addField(`Amount of Messages`, amount, true)
+                                    .addField(`Time between messages`, time, true)
+                                    .addField(`Action on messages`, action, true)
+                                    .addField(`Ping a role`, ping, true)
+                                    message.channel.send(complete);
                                     } else {
                                         mentionSpam._id = message.guild.id;
                                         mentionSpam.type = `role`;
-                                        mentionnSpam.amount = amount;
-                                        mentionnSpam.time = ms(time);
-                                        mentionnSpam.outcome = action;
-                                        mentionnSpam.ping = ping;
-                                        mentionnSpam.save();
+                                        mentionSpam.amount = amount;
+                                        mentionSpam.time = ms(time);
+                                        mentionSpam.outcome = action;
+                                        mentionSpam.ping = ping;
+                                        mentionSpam.tm = tempmutetime;
+                                        mentionSpam.save();
+
+                                    let complete = new Discord.MessageEmbed()
+                                    .setTitle(`Complete`)
+                                    .setColor(client.config.color)
+                                    .setDescription(`Mass mention setup updated.`)
+                                    .addField(`Type`, `Role Mentions`, true)
+                                    .addField(`Amount of Messages`, amount, true)
+                                    .addField(`Time between messages`, time, true)
+                                    .addField(`Action on messages`, action, true)
+                                    .addField(`Ping a role`, ping, true)
+                                    message.channel.send(complete);
                                     }
                                 });
                             }
@@ -225,6 +338,8 @@ exports.run = async(client, message, args) => {
                             let action = m.content;
                             let tempmutetime;
 
+                            if(action !== `tm`) tempmutetime = 0;
+
                             if(action === `tm`) {
                                 let fifth = await message.channel.send(embeds.question(`How long should the tempmute last?`, `Please provide a time in between **1m and 24h.**`));
                                 let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ms(m.content) >= 60000 && ms(m.content) <= 24 * 60 * 60 * 1000, { max: 1 });
@@ -233,10 +348,13 @@ exports.run = async(client, message, args) => {
                                     tempmutetime = m.content;
 
                                     let sixth = await message.channel.send(embeds.question(`Would you want the bot to ping a role when the action has occurred?`, `Tag a role if you do, reply with "no" if you don't.`));
-                                    let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id, { max: 1 });
+                                    let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && m.mentions.roles.first() || m.content === "no", { max: 1 });
                                     collector.on('collect', async m => {
                                         sixth.delete(); m.delete();
-                                        let ping = m.content;
+
+                                        let ping;
+                                        if(m.mentions.roles.first()) ping = m.mentions.roles.first();
+                                        else ping = "none";
         
                                         let mentionSpam = await client.models.mentionspam.findById(message.guild.id);
         
@@ -247,16 +365,40 @@ exports.run = async(client, message, args) => {
                                                 amount: amount,
                                                 time: ms(time),
                                                 outcome: action,
-                                                ping: ping
+                                                ping: ping,
+                                                tm: tempmutetime
                                             });
+
+                                        let complete = new Discord.MessageEmbed()
+                                        .setTitle(`Complete`)
+                                        .setColor(client.config.color)
+                                        .setDescription(`Mass mention setup created.`)
+                                        .addField(`Type`, `Both Mentions`, true)
+                                        .addField(`Amount of Messages`, amount, true)
+                                        .addField(`Time between messages`, time, true)
+                                        .addField(`Action on messages`, action, true)
+                                        .addField(`Ping a role`, ping, true)
+                                        message.channel.send(complete);
                                         } else {
                                             mentionSpam._id = message.guild.id;
                                             mentionSpam.type = `both`;
-                                            mentionnSpam.amount = amount;
-                                            mentionnSpam.time = ms(time);
-                                            mentionnSpam.outcome = action;
-                                            mentionnSpam.ping = ping;
-                                            mentionnSpam.save();
+                                            mentionSpam.amount = amount;
+                                            mentionSpam.time = ms(time);
+                                            mentionSpam.outcome = action;
+                                            mentionSpam.ping = ping;
+                                            mentionSpam.tm = tempmutetime;
+                                            mentionSpam.save();
+
+                                        let complete = new Discord.MessageEmbed()
+                                        .setTitle(`Complete`)
+                                        .setColor(client.config.color)
+                                        .setDescription(`Mass mention setup updated.`)
+                                        .addField(`Type`, `Both Mentions`, true)
+                                        .addField(`Amount of Messages`, amount, true)
+                                        .addField(`Time between messages`, time, true)
+                                        .addField(`Action on messages`, action, true)
+                                        .addField(`Ping a role`, ping, true)
+                                        message.channel.send(complete);
                                         }
                                     });
                                 });
@@ -265,7 +407,10 @@ exports.run = async(client, message, args) => {
                                 let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && [], { max: 1 });
                                 collector.on('collect', async m => {
                                     sixth.delete(); m.delete();
-                                    let ping = m.content;
+                                    
+                                    let ping;
+                                    if(m.mentions.roles.first()) ping = m.mentions.roles.first();
+                                    else ping = "none";
     
                                     let mentionSpam = await client.models.mentionspam.findById(message.guild.id);
     
@@ -276,16 +421,40 @@ exports.run = async(client, message, args) => {
                                             amount: amount,
                                             time: ms(time),
                                             outcome: action,
-                                            ping: ping
+                                            ping: ping,
+                                            tm: tempmutetime
                                         });
+
+                                    let complete = new Discord.MessageEmbed()
+                                    .setTitle(`Complete`)
+                                    .setColor(client.config.color)
+                                    .setDescription(`Mass mention setup created.`)
+                                    .addField(`Type`, `Both Mentions`, true)
+                                    .addField(`Amount of Messages`, amount, true)
+                                    .addField(`Time between messages`, time, true)
+                                    .addField(`Action on messages`, action, true)
+                                    .addField(`Ping a role`, ping, true)
+                                    message.channel.send(complete);
                                     } else {
                                         mentionSpam._id = message.guild.id;
                                         mentionSpam.type = `both`;
-                                        mentionnSpam.amount = amount;
-                                        mentionnSpam.time = ms(time);
-                                        mentionnSpam.outcome = action;
-                                        mentionnSpam.ping = ping;
-                                        mentionnSpam.save();
+                                        mentionSpam.amount = amount;
+                                        mentionSpam.time = ms(time);
+                                        mentionSpam.outcome = action;
+                                        mentionSpam.ping = ping;
+                                        mentionSpam.tm = tempmutetime;
+                                        mentionSpam.save();
+
+                                    let complete = new Discord.MessageEmbed()
+                                    .setTitle(`Complete`)
+                                    .setColor(client.config.color)
+                                    .setDescription(`Mass mention setup updated.`)
+                                    .addField(`Type`, `Both Mentions`, true)
+                                    .addField(`Amount of Messages`, amount, true)
+                                    .addField(`Time between messages`, time, true)
+                                    .addField(`Action on messages`, action, true)
+                                    .addField(`Ping a role`, ping, true)
+                                    message.channel.send(complete);
                                     }
                                 });
                             }
@@ -293,6 +462,146 @@ exports.run = async(client, message, args) => {
                     });
                 });
             }
+        });
+    } else if(args[0] === options[1]) {
+        
+        let first = await message.channel.send(embeds.question(`How many repeated messages should the bot detect before it locks?`, `Please provide a number in between 1-10.`));
+        let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && parseInt(m.content) >= 1 && parseInt(m.content) <= 10, { max: 1 });
+        collector.on('collect', async m => {
+            first.delete(); m.delete();
+            let amount = m.content;
+
+            let timeMax;
+            if(!premiumData) timeMax = 1;
+            else timeMax = 5;
+
+            let second = await message.channel.send(embeds.question(`In how much time would the bot reset the timer for the amount of mentions?`, `Please provide a time in between **30s and ${timeMax}m.**`));
+            let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ms(m.content) >= 30000 && ms(m.content) <= timeMax * 60 * 1000, { max: 1 });
+            collector.on('collect', async m => {
+                second.delete(); m.delete();
+                let time = m.content;
+
+                let third = await message.channel.send(embeds.question(`What action will occur if the bot detects the correct number of mentions?`, `s: Server Lockdown\nc: Channel Lockdown\nb: Ban\n k: Kick\nm: Mute\ntm: Tempmute\n\nUse commas to chose multiple of the above.`));
+                let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ["s", "c", "b", "k", "m", "tm"].includes(m.content), { max: 1 });
+                collector.on('collect', async m => {
+                    third.delete(); m.delete();
+                    let action = m.content;
+                    let tempmutetime;
+
+                    if(action !== `tm`) tempmutetime = 0;
+
+                    if(action === `tm`) {
+                        let fourth = await message.channel.send(embeds.question(`How long should the tempmute last?`, `Please provide a time in between **1m and 24h.**`));
+                        let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ms(m.content) >= 60000 && ms(m.content) <= 24 * 60 * 60 * 1000, { max: 1 });
+                        collector.on('collect', async m => {
+                            fourth.delete(); m.delete();
+                            tempmutetime = m.content;
+
+                            let fifth = await message.channel.send(embeds.question(`Would you want the bot to ping a role when the action has occurred?`, `Tag a role if you do, reply with "no" if you don't.`));
+                            let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && m.mentions.roles.first() || m.content === "no", { max: 1 });
+                            collector.on('collect', async m => {
+                                fifth.delete(); m.delete();
+                                
+                                let ping;
+                                if(m.mentions.roles.first()) ping = m.mentions.roles.first();
+                                else ping = "none";
+
+                                let textSpam = await client.models.textspam.findById(message.guild.id);
+
+                                if(!mentionSpam) {
+                                    client.models.textspam.create({
+                                        _id: message.guild.id,
+                                        amount: amount,
+                                        time: ms(time),
+                                        outcome: action,
+                                        ping: ping,
+                                        tm: tempmutetime
+                                    });
+
+                                let complete = new Discord.MessageEmbed()
+                                .setTitle(`Complete`)
+                                .setColor(client.config.color)
+                                .setDescription(`Mass mention setup created.`)
+                                .addField(`Amount of Messages`, amount, true)
+                                .addField(`Time between messages`, time, true)
+                                .addField(`Action on messages`, action, true)
+                                .addField(`Ping a role`, ping, true)
+                                message.channel.send(complete);
+                                } else {
+                                    textSpam._id = message.guild.id;
+                                    textSpam.amount = amount;
+                                    textSpam.time = ms(time);
+                                    textSpam.outcome = action;
+                                    textSpam.ping = ping;
+                                    textSpam.tm = tempmutetime;
+                                    textSpam.save();
+
+                                let complete = new Discord.MessageEmbed()
+                                .setTitle(`Complete`)
+                                .setColor(client.config.color)
+                                .setDescription(`Text spam setup updated.`)
+                                .addField(`Amount of Messages`, amount, true)
+                                .addField(`Time between messages`, time, true)
+                                .addField(`Action on messages`, action, true)
+                                .addField(`Ping a role`, ping, true)
+                                message.channel.send(complete);
+                                }
+                            });
+                        });
+                    } else {
+                        let sixth = await message.channel.send(embeds.question(`Would you want the bot to ping a role when the action has occurred?`, `Tag a role if you do, reply with "no" if you don't.`));
+                        let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && [], { max: 1 });
+                        collector.on('collect', async m => {
+                            sixth.delete(); m.delete();
+                            
+                            let ping;
+                            if(m.mentions.roles.first()) ping = m.mentions.roles.first();
+                            else ping = "none";
+
+                            let textSpam = await client.models.textspam.findById(message.guild.id);
+
+                            if(!textSpam) {
+                                client.models.textspam.create({
+                                    _id: message.guild.id,
+                                    amount: amount,
+                                    time: ms(time),
+                                    outcome: action,
+                                    ping: ping,
+                                    tm: tempmutetime
+                                });
+
+                            let complete = new Discord.MessageEmbed()
+                            .setTitle(`Complete`)
+                            .setColor(client.config.color)
+                            .setDescription(`Mass mention setup created.`)
+                            .addField(`Amount of Messages`, amount, true)
+                            .addField(`Time between messages`, time, true)
+                            .addField(`Action on messages`, action, true)
+                            .addField(`Ping a role`, ping, true)
+                            message.channel.send(complete);
+                            } else {
+                                textSpam._id = message.guild.id;
+                                textSpam.amount = amount;
+                                textSpam.time = ms(time);
+                                textSpam.outcome = action;
+                                textSpam.ping = ping;
+                                textSpam.tm = tempmutetime;
+                                textSpam.save();
+
+                            let complete = new Discord.MessageEmbed()
+                            .setTitle(`Complete`)
+                            .setColor(client.config.color)
+                            .setDescription(`Mass mention setup updated.`)
+                            .addField(`Amount of Messages`, amount, true)
+                            .addField(`Time between messages`, time, true)
+                            .addField(`Action on messages`, action, true)
+                            .addField(`Ping a role`, ping, true)
+                            message.channel.send(complete);
+                            }
+                        });
+                    }
+                });
+            });
         });
     }
 }

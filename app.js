@@ -13,6 +13,7 @@ client.models = {
   mentionspam: require('./database/models/mentionspam'),
   tempban: require('./database/models/tempban'),
   tempmute: require('./database/models/tempmute'),
+  textspam: require('./database/models/textspam'),
 };
 
 fs.readdir("./events/", (err, files) => {
