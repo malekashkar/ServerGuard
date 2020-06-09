@@ -1,3 +1,4 @@
+const embeds = require("../utils/embed");
 const ms = require("ms");
 
 exports.run = async(client, message, args) => {
@@ -18,7 +19,7 @@ exports.run = async(client, message, args) => {
     else if(premiumData && users.length > 150) users = users.splice(0, 150);
 
     if(role) {
-        if(role.permissions.toArray().includes("ADMINISTRATOR")) return message.channel.send(embeds.error(`You cannot kick users with the role ${role} because it has \`ADMINISTRATOR\` permissions.`))
+        if(role.permissions.toArray().includes("ADMINISTRATOR")) return message.channel.send(embeds.error(`You cannot ban users with the role ${role} because they have \`ADMINISTRATOR\` permissions.`))
 
         message.channel.send(embeds.complete(`Successfully banned all users with the role ${role}.`));
         message.guild.members.cache.forEach(async m => {
@@ -27,6 +28,7 @@ exports.run = async(client, message, args) => {
             }
         });
     } else if(user) {
+        if(user.hasPermission("ADMINISTRATOR")) return message.channel.send(embeds.error(`You cannot ban user ${user} because they have \`ADMINISTRATOR\` permissions.`))
         await user.ban(reason);
         message.channel.send(embeds.complete(`Successfully banned ${user} from the server.`));
     }

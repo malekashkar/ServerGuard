@@ -76,9 +76,9 @@ exports.run = async(client, message, args) => {
                                         .setColor(client.config.color)
                                         .setDescription(`Mass mention setup created.`)
                                         .addField(`Type`, `User Mentions`, true)
-                                        .addField(`Amount of Messages`, amount, true)
-                                        .addField(`Time between messages`, time, true)
-                                        .addField(`Action on messages`, action, true)
+                                        .addField(`Amount of Mentions`, amount, true)
+                                        .addField(`Counter Reset Time`, time, true)
+                                        .addField(`Action on mentions`, verificationName(action), true)
                                         .addField(`Ping a role`, ping, true)
                                         message.channel.send(complete);
                                         } else {
@@ -96,9 +96,9 @@ exports.run = async(client, message, args) => {
                                         .setColor(client.config.color)
                                         .setDescription(`Mass mention setup updated.`)
                                         .addField(`Type`, `User Mentions`, true)
-                                        .addField(`Amount of Messages`, amount, true)
-                                        .addField(`Time between messages`, time, true)
-                                        .addField(`Action on messages`, action, true)
+                                        .addField(`Amount of Mentions`, amount, true)
+                                        .addField(`Counter Reset Time`, time, true)
+                                        .addField(`Action on mentions`, verificationName(action), true)
                                         .addField(`Ping a role`, ping, true)
                                         message.channel.send(complete);
                                         }
@@ -132,9 +132,9 @@ exports.run = async(client, message, args) => {
                                     .setColor(client.config.color)
                                     .setDescription(`Mass mention setup created.`)
                                     .addField(`Type`, `User Mentions`, true)
-                                    .addField(`Amount of Messages`, amount, true)
-                                    .addField(`Time between messages`, time, true)
-                                    .addField(`Action on messages`, action, true)
+                                    .addField(`Amount of Mentions`, amount, true)
+                                    .addField(`Counter Reset Time`, time, true)
+                                    .addField(`Action on mentions`, verificationName(action), true)
                                     .addField(`Ping a role`, ping, true)
                                     message.channel.send(complete);
                                     } else {
@@ -152,9 +152,9 @@ exports.run = async(client, message, args) => {
                                     .setColor(client.config.color)
                                     .setDescription(`Mass mention setup updated.`)
                                     .addField(`Type`, `User Mentions`, true)
-                                    .addField(`Amount of Messages`, amount, true)
-                                    .addField(`Time between messages`, time, true)
-                                    .addField(`Action on messages`, action, true)
+                                    .addField(`Amount of Mentions`, amount, true)
+                                    .addField(`Counter Reset Time`, time, true)
+                                    .addField(`Action on mentions`, verificationName(action), true)
                                     .addField(`Ping a role`, ping, true)
                                     message.channel.send(complete);
                                     }
@@ -225,9 +225,9 @@ exports.run = async(client, message, args) => {
                                         .setColor(client.config.color)
                                         .setDescription(`Mass mention setup created.`)
                                         .addField(`Type`, `Role Mentions`, true)
-                                        .addField(`Amount of Messages`, amount, true)
-                                        .addField(`Time between messages`, time, true)
-                                        .addField(`Action on messages`, action, true)
+                                        .addField(`Amount of Mentions`, amount, true)
+                                        .addField(`Counter Reset Time`, time, true)
+                                        .addField(`Action on mentions`, verificationName(action), true)
                                         .addField(`Ping a role`, ping, true)
                                         message.channel.send(complete);
                                         } else {
@@ -245,9 +245,9 @@ exports.run = async(client, message, args) => {
                                         .setColor(client.config.color)
                                         .setDescription(`Mass mention setup updated.`)
                                         .addField(`Type`, `Role Mentions`, true)
-                                        .addField(`Amount of Messages`, amount, true)
-                                        .addField(`Time between messages`, time, true)
-                                        .addField(`Action on messages`, action, true)
+                                        .addField(`Amount of Mentions`, amount, true)
+                                        .addField(`Counter Reset Time`, time, true)
+                                        .addField(`Action on mentions`, verificationName(action), true)
                                         .addField(`Ping a role`, ping, true)
                                         message.channel.send(complete);
                                         }
@@ -281,9 +281,9 @@ exports.run = async(client, message, args) => {
                                     .setColor(client.config.color)
                                     .setDescription(`Mass mention setup created.`)
                                     .addField(`Type`, `Role Mentions`, true)
-                                    .addField(`Amount of Messages`, amount, true)
-                                    .addField(`Time between messages`, time, true)
-                                    .addField(`Action on messages`, action, true)
+                                    .addField(`Amount of Mentions`, amount, true)
+                                    .addField(`Counter Reset Time`, time, true)
+                                    .addField(`Action on mentions`, verificationName(action), true)
                                     .addField(`Ping a role`, ping, true)
                                     message.channel.send(complete);
                                     } else {
@@ -301,9 +301,9 @@ exports.run = async(client, message, args) => {
                                     .setColor(client.config.color)
                                     .setDescription(`Mass mention setup updated.`)
                                     .addField(`Type`, `Role Mentions`, true)
-                                    .addField(`Amount of Messages`, amount, true)
-                                    .addField(`Time between messages`, time, true)
-                                    .addField(`Action on messages`, action, true)
+                                    .addField(`Amount of Mentions`, amount, true)
+                                    .addField(`Counter Reset Time`, time, true)
+                                    .addField(`Action on mentions`, verificationName(action), true)
                                     .addField(`Ping a role`, ping, true)
                                     message.channel.send(complete);
                                     }
@@ -374,9 +374,9 @@ exports.run = async(client, message, args) => {
                                         .setColor(client.config.color)
                                         .setDescription(`Mass mention setup created.`)
                                         .addField(`Type`, `Both Mentions`, true)
-                                        .addField(`Amount of Messages`, amount, true)
-                                        .addField(`Time between messages`, time, true)
-                                        .addField(`Action on messages`, action, true)
+                                        .addField(`Amount of Mentions`, amount, true)
+                                        .addField(`Counter Reset Time`, time, true)
+                                        .addField(`Action on mentions`, verificationName(action), true)
                                         .addField(`Ping a role`, ping, true)
                                         message.channel.send(complete);
                                         } else {
@@ -394,9 +394,9 @@ exports.run = async(client, message, args) => {
                                         .setColor(client.config.color)
                                         .setDescription(`Mass mention setup updated.`)
                                         .addField(`Type`, `Both Mentions`, true)
-                                        .addField(`Amount of Messages`, amount, true)
-                                        .addField(`Time between messages`, time, true)
-                                        .addField(`Action on messages`, action, true)
+                                        .addField(`Amount of Mentions`, amount, true)
+                                        .addField(`Counter Reset Time`, time, true)
+                                        .addField(`Action on mentions`, verificationName(action), true)
                                         .addField(`Ping a role`, ping, true)
                                         message.channel.send(complete);
                                         }
@@ -430,9 +430,9 @@ exports.run = async(client, message, args) => {
                                     .setColor(client.config.color)
                                     .setDescription(`Mass mention setup created.`)
                                     .addField(`Type`, `Both Mentions`, true)
-                                    .addField(`Amount of Messages`, amount, true)
-                                    .addField(`Time between messages`, time, true)
-                                    .addField(`Action on messages`, action, true)
+                                    .addField(`Amount of Mentions`, amount, true)
+                                    .addField(`Counter Reset Time`, time, true)
+                                    .addField(`Action on mentions`, verificationName(action), true)
                                     .addField(`Ping a role`, ping, true)
                                     message.channel.send(complete);
                                     } else {
@@ -451,8 +451,8 @@ exports.run = async(client, message, args) => {
                                     .setDescription(`Mass mention setup updated.`)
                                     .addField(`Type`, `Both Mentions`, true)
                                     .addField(`Amount of Messages`, amount, true)
-                                    .addField(`Time between messages`, time, true)
-                                    .addField(`Action on messages`, action, true)
+                                    .addField(`Counter Reset Time`, time, true)
+                                    .addField(`Action on messages`, verificationName(action), true)
                                     .addField(`Ping a role`, ping, true)
                                     message.channel.send(complete);
                                     }
@@ -464,7 +464,6 @@ exports.run = async(client, message, args) => {
             }
         });
     } else if(args[0] === options[1]) {
-        
         let first = await message.channel.send(embeds.question(`How many repeated messages should the bot detect before it locks?`, `Please provide a number in between 1-10.`));
         let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && parseInt(m.content) >= 1 && parseInt(m.content) <= 10, { max: 1 });
         collector.on('collect', async m => {
@@ -481,7 +480,7 @@ exports.run = async(client, message, args) => {
                 second.delete(); m.delete();
                 let time = m.content;
 
-                let third = await message.channel.send(embeds.question(`What action will occur if the bot detects the correct number of mentions?`, `s: Server Lockdown\nc: Channel Lockdown\nb: Ban\n k: Kick\nm: Mute\ntm: Tempmute\n\nUse commas to chose multiple of the above.`));
+                let third = await message.channel.send(embeds.question(`What action will occur if the bot detects the correct number of mentions?`, `s: Server Lockdown\nc: Channel Lockdown\nb: Ban\n k: Kick\nm: Mute\ntm: Tempmute`));
                 let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ["s", "c", "b", "k", "m", "tm"].includes(m.content), { max: 1 });
                 collector.on('collect', async m => {
                     third.delete(); m.delete();
@@ -508,7 +507,7 @@ exports.run = async(client, message, args) => {
 
                                 let textSpam = await client.models.textspam.findById(message.guild.id);
 
-                                if(!mentionSpam) {
+                                if(!textSpam) {
                                     client.models.textspam.create({
                                         _id: message.guild.id,
                                         amount: amount,
@@ -523,8 +522,8 @@ exports.run = async(client, message, args) => {
                                 .setColor(client.config.color)
                                 .setDescription(`Mass mention setup created.`)
                                 .addField(`Amount of Messages`, amount, true)
-                                .addField(`Time between messages`, time, true)
-                                .addField(`Action on messages`, action, true)
+                                .addField(`Counter Reset Time`, time, true)
+                                .addField(`Action on messages`, verificationName(action), true)
                                 .addField(`Ping a role`, ping, true)
                                 message.channel.send(complete);
                                 } else {
@@ -541,8 +540,8 @@ exports.run = async(client, message, args) => {
                                 .setColor(client.config.color)
                                 .setDescription(`Text spam setup updated.`)
                                 .addField(`Amount of Messages`, amount, true)
-                                .addField(`Time between messages`, time, true)
-                                .addField(`Action on messages`, action, true)
+                                .addField(`Counter Reset Time`, time, true)
+                                .addField(`Action on messages`, verificationName(action), true)
                                 .addField(`Ping a role`, ping, true)
                                 message.channel.send(complete);
                                 }
@@ -575,8 +574,8 @@ exports.run = async(client, message, args) => {
                             .setColor(client.config.color)
                             .setDescription(`Mass mention setup created.`)
                             .addField(`Amount of Messages`, amount, true)
-                            .addField(`Time between messages`, time, true)
-                            .addField(`Action on messages`, action, true)
+                            .addField(`Counter Reset Time`, time, true)
+                            .addField(`Action on messages`, verificationName(action), true)
                             .addField(`Ping a role`, ping, true)
                             message.channel.send(complete);
                             } else {
@@ -593,8 +592,8 @@ exports.run = async(client, message, args) => {
                             .setColor(client.config.color)
                             .setDescription(`Mass mention setup updated.`)
                             .addField(`Amount of Messages`, amount, true)
-                            .addField(`Time between messages`, time, true)
-                            .addField(`Action on messages`, action, true)
+                            .addField(`Counter Reset Time`, time, true)
+                            .addField(`Action on messages`, verificationName(action), true)
                             .addField(`Ping a role`, ping, true)
                             message.channel.send(complete);
                             }
@@ -604,4 +603,16 @@ exports.run = async(client, message, args) => {
             });
         });
     }
+}
+
+function verificationName(type) {
+    let x;
+    if(type === `s`) x = `Server Lockdown`;
+    if(type === `c`) x = `Channel Lockdown`;
+    if(type === `b`) x = `Ban User`;
+    if(type === `k`) x = `Kick User`;
+    if(type === `m`) x = `Mute User`;
+    if(type === `tm`) x = `Tempmute User`;
+
+    return x;
 }

@@ -4,6 +4,7 @@ const Config = new mongoose.Schema({
   prefix: { type: String, default: "*" },
   modlogs: { type: String, default: "none" },
   autorole: Array,
+  muterole: String,
   updatechannel: { type: String, default: "none" },
   logchannel: { type: String, default: "none" },
   lockbypass_roles: Array,

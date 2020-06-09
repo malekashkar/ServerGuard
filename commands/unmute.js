@@ -12,7 +12,7 @@ exports.run = async(client, message, args) => {
     let users = message.guild.members.cache;
     let muterole;
 
-    if(!guildData.autorole) {
+    if(!guildData.muterole) {
       try {
         muterole = await message.guild.roles.create({
           data: {
@@ -20,7 +20,7 @@ exports.run = async(client, message, args) => {
             color: `BLACK`
         }});
 
-        guildData.autorole = muterole.id;
+        guildData.muterole = muterole.id;
         guildData.save();
 
         message.guild.channels.cache.forEach(async c => {
@@ -29,7 +29,7 @@ exports.run = async(client, message, args) => {
       } catch(e) {
         console.log(e.stack);
       }
-    } else muterole = message.guild.roles.cache.get(guildData.autorole);
+    } else muterole = message.guild.roles.cache.get(guildData.muterole);
 
     if(!premiumData && users.length > 35) users = users.splice(0, 35);
     else if(premiumData && users.length > 150) users = users.splice(0, 150);

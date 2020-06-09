@@ -3,7 +3,7 @@ const embeds = require("../utils/embed");
 
 exports.run = async(client, message, args) => {
     let user = args[0];
-    let reason = args.join(1).join(" ");
+    let reason = args.splice(1).join(" ");
     let guildData = await client.models.config.findById(message.guild.id);
     
     if(!args[0]) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}unban <user tag>`));
@@ -17,6 +17,6 @@ exports.run = async(client, message, args) => {
             message.guild.unban(user.id, reason);
             message.channel.send(embeds.complete(`Successfully unbanned ${user}.`));
 
-        } else return message.reply(`This person is not banned`);
+        } else return message.channel.send(embeds.error(`**${user}** is not banned from the server!`));
     });
 }
