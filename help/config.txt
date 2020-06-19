@@ -1,0 +1,20 @@
+**Description:** Configures a setting
+
+**__Usage__**
+
+-p-config
+
+**__Subcommands__**
+
+-p-config lockbypass <role>: Sets a role that can bypass locks
+-p-config updatechannel <channel>: Sets the update channel
+-p-config logchannel <channel>: Sets the log channel
+-p-config modlogs <channel>: Sets the mod log channel
+-p-config mutedrole <role|create>: Sets the muted role
+
+**__Premium Only__**
+
+-p-config prefix <prefix>
+-p-config verifiedrole <role>
+-p-config unverifiedrole <role>
+-p-config punishdm <enable|disable>

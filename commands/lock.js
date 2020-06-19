@@ -10,7 +10,19 @@ exports.run = async(client, message, args) => {
         if(!reason) reason = `None`;
 
         if(!channel) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}lock channel <#channel> [reason]`));
-        channel.updateOverwrite(message.guild.id, { VIEW_CHANNEL: false, SEND_MESSAGES: false });
+        channel.updateOverwrite(message.guild.id, { SEND_MESSAGES: false });
+
+        if(guildData.lockbypass_roles) {
+            guildData.lockbypass_roles.forEach(id => {
+                channel.updateOverwrite(id, { SEND_MESSAGES: true });
+            });
+        }
+
+        if(guildData.lockbypass_users) {
+            guildData.lockbypass_users.forEach(id => {
+                channel.updateOverwrite(id, { SEND_MESSAGES: true });
+            });
+        }
 
         message.channel.send(embeds.complete(`Successfuly locked the channel ${channel}.`));
     } else if(args[0] === options[1]) {
@@ -22,7 +34,21 @@ exports.run = async(client, message, args) => {
 
         message.channel.send(embeds.complete(`Successfuly locked the channels under the category ID: **${id}**.`));
         message.guild.channels.cache.forEach(c => {
-            if(c.parent && c.parent.id === id) c.updateOverwrite(message.guild.id, { VIEW_CHANNEL: false, SEND_MESSAGES: false })
+            if(c.parent && c.parent.id === id) {
+                c.updateOverwrite(message.guild.id, { SEND_MESSAGES: false });
+
+                if(guildData.lockbypass_roles) {
+                    guildData.lockbypass_roles.forEach(id => {
+                        c.updateOverwrite(id, { SEND_MESSAGES: true });
+                    });
+                }
+        
+                if(guildData.lockbypass_users) {
+                    guildData.lockbypass_users.forEach(id => {
+                        c.updateOverwrite(id, { SEND_MESSAGES: true });
+                    });
+                }
+            }
         });
     }
 }

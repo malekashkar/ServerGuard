@@ -3,10 +3,10 @@ const Config = new mongoose.Schema({
   _id: String,
   prefix: { type: String, default: "*" },
   modlogs: { type: String, default: "none" },
+  logchannel: { type: String, default: "none" },
+  adminrole: Array,
   autorole: Array,
   muterole: String,
-  updatechannel: { type: String, default: "none" },
-  logchannel: { type: String, default: "none" },
   lockbypass_roles: Array,
   lockbypass_users: Array
 });

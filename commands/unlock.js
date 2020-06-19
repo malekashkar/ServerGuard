@@ -13,7 +13,7 @@ exports.run = async(client, message, args) => {
         channel.updateOverwrite(message.guild.id, { VIEW_CHANNEL: true, SEND_MESSAGES: true });
 
         message.channel.send(embeds.complete(`Successfuly unlocked the channel ${channel}.`));
-    } else if(args[0] === options[1]) {
+    } else if(args[0] === options[1]) {``
         let id = args[1];
         if(!id) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}unlock category <category id> [reason]`));
         

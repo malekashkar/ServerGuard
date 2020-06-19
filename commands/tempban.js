@@ -7,7 +7,7 @@ exports.run = async(client, message, args) => {
     let reason = args.splice(2).join(" ");
     let time = args[1];
     
-    if(!args[0] || !time) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}mute <@user/@role> <time> [reason]`));
+    if(!args[0] || !time) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}tempban <@user/@role> <time> [reason]`));
 
     if(reason);
     else reason = `No Reason Provided`;
@@ -22,9 +22,25 @@ exports.run = async(client, message, args) => {
     if(role) {
         if(role.permissions.toArray().includes("ADMINISTRATOR")) return message.channel.send(embeds.error(`You cannot ban users with the role ${role} because it has \`ADMINISTRATOR\` permissions.`))
 
-        message.channel.send(embeds.complete(`Successfully banned all users with the role ${role}.`));
+        message.channel.send(embeds.complete(`Successfully temp-banned all users with the role ${role}.`));
+        if(guildData.modlogs !== `none`) message.guild.channels.cache.get(guildData.modlogs).send(embeds.log(`Successfully temp-banned all users with the role ${role}.`, `tempban`));
+        
+        if(!premiumData) {
+          client.models.cooldown.create({
+            user: message.author.id,
+            time: Date.now() + 45000,
+            command: `tempban`
+          });
+        } else {
+          client.models.cooldown.create({
+            user: message.author.id,
+            time: Date.now() + 10000,
+            command: `tempban`
+          });
+        }
+
         message.guild.members.cache.forEach(async m => {
-            if(!m.hasPermission("ADMINISTRATOR") && m.roles.cache.has(role.id)) {
+        if(!m.hasPermission("ADMINISTRATOR") && m.roles.cache.has(role.id)) {
                 await m.ban(reason);
 
                 client.models.tempban.create({
@@ -44,7 +60,22 @@ exports.run = async(client, message, args) => {
         time: Date.now() + ms(time)
       });  
 
+      if(!premiumData) {
+        client.models.cooldown.create({
+          user: message.author.id,
+          time: Date.now() + 45000,
+          command: `tempban`
+        });
+      } else {
+        client.models.cooldown.create({
+          user: message.author.id,
+          time: Date.now() + 10000,
+          command: `tempban`
+        });
+      }
+
       member.ban(reason);
-      message.channel.send(embeds.complete(`Successfully banned ${user}.`));
+      message.channel.send(embeds.complete(`Successfully temp-banned ${user}.`));
+      if(guildData.modlogs !== `none`) message.guild.channels.cache.get(guildData.modlogs).send(embeds.log(`Successfully temp-banned ${user}.`, `tempban`));
     }
 }

@@ -1,0 +1,7 @@
+**Description:** Gives a role upon joining
+
+**__Subcommands__**
+
+-p-autorole add <role>: Adds a new autorole
+-p-autorole list: Lists all the current autoroles
+-p-autorole remove: Removes an autorole

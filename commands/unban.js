@@ -1,22 +1,29 @@
-const ms = require("ms");
 const embeds = require("../utils/embed");
 
 exports.run = async(client, message, args) => {
-    let user = args[0];
     let reason = args.splice(1).join(" ");
     let guildData = await client.models.config.findById(message.guild.id);
     
-    if(!args[0]) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}unban <user tag>`));
+    if(!args[0]) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}unban <tag/id>`));
     if(!reason) reason = `None`;
 
-    message.guild.fetchBans().then(bans => {
-        if(bans.some(u => user.includes(u.tag))) {
+    let bans = await message.guild.fetchBans();
 
-            let user = bans.find(user => user.tag === user);
-            
-            message.guild.unban(user.id, reason);
-            message.channel.send(embeds.complete(`Successfully unbanned ${user}.`));
-
-        } else return message.channel.send(embeds.error(`**${user}** is not banned from the server!`));
-    });
+    if(args[0].includes("#")) {
+        bans.forEach(b => {
+            if(b.user.username === args[0].split("#")[0] && b.user.discriminator === args[0].split("#")[1]) {
+                message.channel.send(embeds.complete(`Successfully unbanned <${b.user.id}> from the server.`));
+                if(guildData.modlogs !== `none`) message.guild.channels.cache.get(guildData.modlogs).send(embeds.log(`Successfully unbanned <@${b.user.id}> from the server.`, `unban`));
+                message.guild.members.unban(b.user.id, reason);
+            }
+        });
+    } else {
+        bans.forEach(b => {
+            if(b.user.id === args[0]) {
+                message.channel.send(embeds.complete(`Successfully unbanned <@${b.user.id}> from the server.`));
+                if(guildData.modlogs !== `none`) message.guild.channels.cache.get(guildData.modlogs).send(embeds.log(`Successfully unbanned <@${b.user.id}> from the server.`, `unban`));
+                message.guild.members.unban(b.user.id, reason);
+            }
+        });   
+    }
 }

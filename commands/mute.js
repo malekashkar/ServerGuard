@@ -42,6 +42,22 @@ exports.run = async(client, message, args) => {
         if(role.permissions.toArray().includes("ADMINISTRATOR")) return message.channel.send(embeds.error(`You cannot mute users with the role ${role} because it has \`ADMINISTRATOR\` permissions.`))
 
         message.channel.send(embeds.complete(`Successfully muted all users with the role ${role}.`));
+        if(guildData.modlogs !== `none`) message.guild.channels.cache.get(guildData.modlogs).send(embeds.log(`Successfully muted all users with the role ${role}.`, `mute`));
+       
+        if(!premiumData) {
+          client.models.cooldown.create({
+            user: message.author.id,
+            time: Date.now() + 45000,
+            command: `mute`
+          });
+        } else {
+          client.models.cooldown.create({
+            user: message.author.id,
+            time: Date.now() + 10000,
+            command: `mute`
+          });
+        }
+
         message.guild.members.cache.forEach(async m => {
             if(!m.hasPermission("ADMINISTRATOR") && m.roles.cache.has(role.id) && !m.roles.cache.has(muterole.id)) {
                 await m.roles.add(muterole);
@@ -54,5 +70,20 @@ exports.run = async(client, message, args) => {
 
       await member.roles.add(muterole);
       message.channel.send(embeds.complete(`Successfully muted ${user}.`));
+      if(guildData.modlogs !== `none`) message.guild.channels.cache.get(guildData.modlogs).send(embeds.log(`Successfully muted ${user}.`, `mute`));
+
+      if(!premiumData) {
+        client.models.cooldown.create({
+          user: message.author.id,
+          time: Date.now() + 45000,
+          command: `mute`
+        });
+      } else {
+        client.models.cooldown.create({
+          user: message.author.id,
+          time: Date.now() + 10000,
+          command: `mute`
+        });
+      }
     }
 }

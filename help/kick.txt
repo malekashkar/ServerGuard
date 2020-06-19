@@ -1,0 +1,5 @@
+**Description:** Kicks a member
+
+**__Usage__**
+
+-p-kick <user|role> [reason]

@@ -1,5 +1,4 @@
 const embeds = require("../utils/embed");
-const ms = require("ms");
 
 exports.run = async(client, message, args) => {
     let guildData = await client.models.config.findById(message.guild.id);

@@ -1,0 +1,5 @@
+**Description:** Changes the current channel's slowmode
+
+**__Usage__**
+
+-p-slowmode <time>

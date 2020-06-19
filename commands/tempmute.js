@@ -43,6 +43,22 @@ exports.run = async(client, message, args) => {
         if(role.permissions.toArray().includes("ADMINISTRATOR")) return message.channel.send(embeds.error(`You cannot tempmute users with the role ${role} because it has \`ADMINISTRATOR\` permissions.`))
 
         message.channel.send(embeds.complete(`Successfully tempmuted all users with the role ${role}.`));
+        if(guildData.modlogs !== `none`) message.guild.channels.cache.get(guildData.modlogs).send(embeds.log(`Successfully tempmuted all users with the role ${role}.`, `tempmute`));
+        
+        if(!premiumData) {
+          client.models.cooldown.create({
+            user: message.author.id,
+            time: Date.now() + 45000,
+            command: `tempmute`
+          });
+        } else {
+          client.models.cooldown.create({
+            user: message.author.id,
+            time: Date.now() + 10000,
+            command: `tempmute`
+          });
+        }
+
         message.guild.members.cache.forEach(async m => {
             if(!m.hasPermission("ADMINISTRATOR") && m.roles.cache.has(role.id) && !m.roles.cache.has(muterole.id)) {
                 await m.roles.add(muterole);
@@ -59,6 +75,20 @@ exports.run = async(client, message, args) => {
       if(member.hasPermission("ADMINISTRATOR")) return message.channel.send(embeds.error(`You cannot tempmute ${user} because they have \`ADMINISTRATOR\` permissions.`))
       if(member.roles.cache.has(muterole.id)) return message.channel.send(embeds.error(`User ${user} is already tempmuted!`))
 
+      if(!premiumData) {
+        client.models.cooldown.create({
+          user: message.author.id,
+          time: Date.now() + 45000,
+          command: `tempmute`
+        });
+      } else {
+        client.models.cooldown.create({
+          user: message.author.id,
+          time: Date.now() + 10000,
+          command: `tempmute`
+        });
+      }
+
       client.models.tempmute.create({
         _id: user.id,
         guild: message.guild.id,
@@ -67,5 +97,6 @@ exports.run = async(client, message, args) => {
 
       await member.roles.add(muterole);
       message.channel.send(embeds.complete(`Successfully tempmuted ${user}.`));
+      if(guildData.modlogs !== `none`) message.guild.channels.cache.get(guildData.modlogs).send(embeds.log(`Successfully tempmuted ${user}.`, `tempmute`));
     }
 }

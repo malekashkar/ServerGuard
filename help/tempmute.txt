@@ -1,0 +1,5 @@
+**Description:** Temporaily mutes a member
+
+**__Usage__**
+
+-p-tempmute <user|role> <time> [reason]

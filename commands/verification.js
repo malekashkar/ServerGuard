@@ -1,19 +1,19 @@
 const embeds = require("../utils/embed");
 
 exports.run = async(client, message, args) => {
-    let options = ['enable', `disable`];
+    let options = [`enable`, `disable`];
     let guildData = await client.models.config.findById(message.guild.id);
     let premiumData = await client.models.premium.findById(message.guild.id);
-    let verData = await client.models.verification.findByID(message.guild.id);
+    let verData = await client.models.verification.findById(message.guild.id);
 
-    if(!args[0] || options.includes(args[0].toLowerCase())) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}verification [enable/disable]`));
+    if(!args[0] || !options.includes(args[0])) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}verification [enable/disable]`));
 
     if(!verData) {
         let channel = await message.guild.channels.create(`verification`);
-        let role = await message.guild.roles.create({ data: { name: `Verification`, color: `GREEN`, permissions: [] } });
+        let role = await message.guild.roles.create({ data: { name: `Verified`, color: `GREEN`, permissions: [] } });
 
         channel.createOverwrite(message.guild.id, { VIEW_CHANNEL: true, SEND_MESSAGES: false, ADD_REACTIONS: true });
-        let msg = await channel.send(embeds.verification); msg.react("✅");
+        let msg = await channel.send(embeds.verification()); msg.react("✅");
 
         message.channel.send(embeds.complete(`Verification has been created in ${channel} with the role ${role}.\n**DO NOT** forget to config verification channel permissions.`));
 
@@ -46,7 +46,7 @@ exports.run = async(client, message, args) => {
 
                 if(channel !== "same" && role !== `same`) {
                     channel.createOverwrite(message.guild.id, { VIEW_CHANNEL: true, SEND_MESSAGES: false, ADD_REACTIONS: true });
-                    let msg = await channel.send(embeds.verification); msg.react("✅");
+                    let msg = await channel.send(embeds.verification()); msg.react("✅");
                     message.channel.send(embeds.complete(`Verification channel updated to ${channel} with the role ${role}.\n**DO NOT** forget to config verification channel permissions.`));
                     
                     verData.role = role.id;
@@ -55,7 +55,7 @@ exports.run = async(client, message, args) => {
                     verData.save();
                 } else if(channel !== "same" && role === "same") {            
                     channel.createOverwrite(message.guild.id, { VIEW_CHANNEL: true, SEND_MESSAGES: false, ADD_REACTIONS: true });
-                    let msg = await channel.send(embeds.verification); msg.react("✅");
+                    let msg = await channel.send(embeds.verification()); msg.react("✅");
                     message.channel.send(embeds.complete(`Verification has been updated to ${channel}.`));
                 
                     verData.channel = channel.id;

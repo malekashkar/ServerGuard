@@ -1,0 +1,5 @@
+**Description:** Toggles verification
+
+**__Usage__**
+
+-p-verification <enable|disable>

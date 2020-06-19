@@ -1,0 +1,7 @@
+**Description:** Locks it so that no-one can speak
+
+**__Subcommands__**
+
+-p-lock server <time|disable> [reason]: Locks all channels from being talked into.
+-p-lock category <time|disable> [reason]: Locks all channels that are in the given category from being talked into.
+-p-lock channel <time|disable> [reason]: Locks the channel from being talked into.

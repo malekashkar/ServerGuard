@@ -38,6 +38,7 @@ exports.run = async(client, message, args) => {
         if(role.permissions.toArray().includes("ADMINISTRATOR")) return message.channel.send(embeds.error(`You cannot unmute users with the role ${role} because it has \`ADMINISTRATOR\` permissions.`))
         
         message.channel.send(embeds.complete(`Successfully unmuted all users with the role ${role}.`));
+        if(guildData.modlogs !== `none`) message.guild.channels.cache.get(guildData.modlogs).send(embeds.log(`Successfully unmuted all users with the role ${role}.`, `unmute`));
         message.guild.members.cache.forEach(async m => {
             if(!m.hasPermission("ADMINISTRATOR") && m.roles.cache.has(role.id) && m.roles.cache.has(muterole.id)) {
                 await m.roles.remove(muterole);
@@ -50,5 +51,6 @@ exports.run = async(client, message, args) => {
 
       await member.roles.remove(muterole);
       message.channel.send(embeds.complete(`Successfully unmuted ${user}.`));
+      if(guildData.modlogs !== `none`) message.guild.channels.cache.get(guildData.modlogs).send(embeds.log(`Successfully unmuted ${user}.`, `unmute`));
     }
 }

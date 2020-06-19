@@ -1,0 +1,10 @@
+**__Premium Only__**
+
+**Description:** Stops members from joining
+
+**__Subcommands__**
+
+-p-join lock <time|disable>
+-p-join ban <time|disable>
+-p-join kick <time|disable>
+-p-join mute <time|disable>

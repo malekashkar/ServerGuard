@@ -1,0 +1,5 @@
+**Description:** Temporairly bans a member
+
+**__Usage__**
+
+-p-tempban <user|role> <time> [reason]

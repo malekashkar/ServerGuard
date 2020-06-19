@@ -1,0 +1,8 @@
+**__Premium Only__**
+
+**Description:** Deletes messages
+
+**__Subcommands__**
+
+-p-purge messages <user|role> <time|message count>: Purges messages from user/role
+-p-purge messages <user|role> <time|message count>: Purges links from user/role

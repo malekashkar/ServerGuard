@@ -6,8 +6,8 @@ exports.run = async(client, message, args) => {
     let member = message.mentions.members.first();
     let role = message.guild.roles.cache.get(client.config.premium_role);
     let guildData = await client.models.config.findById(message.guild.id);
-    if(!member) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}givepremium <@user>`));
+    if(!member) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}removepremium <@user>`));
     
-    member.roles.add(role);
-    message.channel.send(embeds.complete(`Successfuly given premium role to ${member}.`));
+    member.roles.remove(role);
+    message.channel.send(embeds.complete(`Successfuly taken away premium role from ${member}.`));
 }

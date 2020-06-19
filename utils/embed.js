@@ -5,7 +5,7 @@ function error(text) {
     let embed = new Discord.MessageEmbed()
     .setColor(config.color)
     .setTitle(`Error`)
-    .setDescription(text)
+    .setDescription(text + `\n\nJoin support server for further support, ${config.discord_invite}`)
     .setFooter(config.name)
     .setTimestamp()
 
@@ -17,6 +17,17 @@ function complete(text) {
     .setColor(config.color)
     .setTitle(`Complete`)
     .setDescription(text)
+    .setFooter(config.name)
+    .setTimestamp()
+
+    return embed;
+}
+
+function premium_end() {
+    let embed = new Discord.MessageEmbed()
+    .setColor(config.color)
+    .setTitle(`Premium Ended`)
+    .setDescription(`Your premium plan has ended. Click [here](${config.patreon_link}) to renew it!`)
     .setFooter(config.name)
     .setTimestamp()
 
@@ -41,11 +52,13 @@ function premium(mode) {
     let embed = new Discord.MessageEmbed()
     .setColor(config.color)
     .setTitle(`Upgrade to Premium`)
-    .setDescription(`You have reached the max limit of **${amount}** for **${type}**.\nPlease upgrade to premium to get further access to this feature.`)
+    .setDescription(`You have reached the max limit of **${amount}** for **${type}**.\nTo extend this time please purchase premium with the **premium command.**`)
     .setFooter(config.name)
     .setTimestamp()
 
-    if(mode === 'verification') embed.setDescription(`Please upgrade to premium in order to re-setup your verification information.`)
+    if(mode === 'verification') embed.setDescription(`Please upgrade to premium in order to re-setup your verification information.`);
+    if(mode === 'prefix') embed.setDescription(`Please upgrade to premium in order to config your server commands prefix.`);
+    if(mode === 'join') embed.setDescription(`Please upgrade to premium in order to use the join command.`);
 
     return embed;
 }
@@ -70,11 +83,30 @@ function verification() {
     return embed;
 }
 
+function log(text, type) {
+    if(type === `kick`) type = `Member Kicked`;
+    if(type === `ban`) type = `Member Banned`;
+    if(type === `mute`) type = `Member Muted`;
+    if(type === `tempmute`) type = `Member Tempmuted`;
+    if(type === `tempban`) type = `Member Tempbanned`;
+    if(type === `channel lock`) type = `Channel Locked`
+
+    let embed = new Discord.MessageEmbed()
+    .setColor(config.color)
+    .setTitle(type)
+    .setDescription(text)
+    .setFooter(`Moderation Logs`)
+
+    return embed;
+}
+
 module.exports = {
     error,
     complete,
     autorole,
     premium,
     question,
-    verification
+    verification,
+    log,
+    premium_end
 }

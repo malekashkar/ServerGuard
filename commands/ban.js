@@ -22,6 +22,22 @@ exports.run = async(client, message, args) => {
         if(role.permissions.toArray().includes("ADMINISTRATOR")) return message.channel.send(embeds.error(`You cannot ban users with the role ${role} because they have \`ADMINISTRATOR\` permissions.`))
 
         message.channel.send(embeds.complete(`Successfully banned all users with the role ${role}.`));
+        if(guildData.modlogs !== `none`) message.guild.channels.cache.get(guildData.modlogs).send(embeds.log(`Successfully banned all users with the role ${role}.`, `ban`));
+
+        if(!premiumData) {
+            client.models.cooldown.create({
+              user: message.author.id,
+              time: Date.now() + 45000,
+              command: `ban`
+            });
+          } else {
+            client.models.cooldown.create({
+              user: message.author.id,
+              time: Date.now() + 10000,
+              command: `ban`
+            });
+          }
+          
         message.guild.members.cache.forEach(async m => {
             if(!m.hasPermission("ADMINISTRATOR") && m.roles.cache.has(role.id)) {
                 await m.ban(reason);
@@ -31,5 +47,20 @@ exports.run = async(client, message, args) => {
         if(user.hasPermission("ADMINISTRATOR")) return message.channel.send(embeds.error(`You cannot ban user ${user} because they have \`ADMINISTRATOR\` permissions.`))
         await user.ban(reason);
         message.channel.send(embeds.complete(`Successfully banned ${user} from the server.`));
+        if(guildData.modlogs !== `none`) message.guild.channels.cache.get(guildData.modlogs).send(embeds.log(`Successfully banned ${user} from the server.`, `ban`));
+
+        if(!premiumData) {
+          client.models.cooldown.create({
+            user: message.author.id,
+            time: Date.now() + 45000,
+            command: `ban`
+          });
+        } else {
+          client.models.cooldown.create({
+            user: message.author.id,
+            time: Date.now() + 10000,
+            command: `ban`
+          });
+        }
     }
 }

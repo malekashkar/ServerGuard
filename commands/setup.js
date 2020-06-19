@@ -3,11 +3,13 @@ const embeds = require("../utils/embed");
 const ms = require("ms");
 
 exports.run = async(client, message, args) => {
-    let premiumData = client.models.premium.findById(message.guild.id);
+    let premiumData = await client.models.premium.findById(message.guild.id);
+    let guildData = await client.models.config.findById(message.guild.id);
     let options = [`massmention`, `repeatedmsg`];
 
+    if(!args[0]) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}setup [massmention/repeatedmsg]`))
+
     if(args[0] === options[0]) {
-        
         let first = await message.channel.send(embeds.question(`What would you like to detect?`, `\n\n🟢 Detected User Mentions\n🔵 Detect Role Mentions\n🔴 Detect Both`));
         first.react("🟢"); first.react("🔵"); first.react("🔴");
         let fCollector = first.createReactionCollector((reaction, user) => ["🟢", "🔵", "🔴"].includes(reaction.emoji.name) && user.id === message.author.id, { max: 1 });
@@ -27,14 +29,18 @@ exports.run = async(client, message, args) => {
                     if(!premiumData) timeMax = 1;
                     else timeMax = 5;
 
-                    let third = await message.channel.send(embeds.question(`In how much time would the bot reset the timer for the amount of mentions?`, `Please provide a time in between **30s and ${timeMax}m.**`));
+                    let timeMaxText;
+                    if(!premiumData) timeMaxText = `Please provide a time in between **30s and ${timeMax}m.**\nTo extend this time, purchase premium with **${guildData.prefix}premium**`;
+                    else timeMaxText = `Please provide a time in between **30s and ${timeMax}m.**`;
+
+                    let third = await message.channel.send(embeds.question(`In how much time would the bot reset the timer for the amount of mentions?`, timeMaxText));
                     let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ms(m.content) >= 30000 && ms(m.content) <= timeMax * 60 * 1000, { max: 1 });
                     collector.on('collect', async m => {
                         third.delete(); m.delete();
                         let time = m.content;
 
-                        let fourth = await message.channel.send(embeds.question(`What action will occur if the bot detects the correct number of mentions?`, `s: Server Lockdown\nc: Channel Lockdown\nb: Ban\n k: Kick\nm: Mute\ntm: Tempmute`));
-                        let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ["s", "c", "b", "k", "m", "tm"].includes(m.content), { max: 1 });
+                        let fourth = await message.channel.send(embeds.question(`What action will occur if the bot detects the correct number of mentions?`, `c: Channel Lockdown\nb: Ban\n k: Kick\nm: Mute\ntm: Tempmute`));
+                        let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ["c", "b", "k", "m", "tm"].includes(m.content), { max: 1 });
                         collector.on('collect', async m => {
                             fourth.delete(); m.delete();
                             let action = m.content;
@@ -176,14 +182,18 @@ exports.run = async(client, message, args) => {
                     if(!premiumData) timeMax = 1;
                     else timeMax = 5;
 
-                    let third = await message.channel.send(embeds.question(`In how much time would the bot reset the timer for the amount of mentions?`, `Please provide a time in between **30s and ${timeMax}m.**`));
+                    let timeMaxText;
+                    if(!premiumData) timeMaxText = `Please provide a time in between **30s and ${timeMax}m.**\nTo extend this time, purchase premium with **${guildData.prefix}premium**`;
+                    else timeMaxText = `Please provide a time in between **30s and ${timeMax}m.**`;
+
+                    let third = await message.channel.send(embeds.question(`In how much time would the bot reset the timer for the amount of mentions?`, timeMaxText));
                     let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ms(m.content) >= 30000 && ms(m.content) <= timeMax * 60 * 1000, { max: 1 });
                     collector.on('collect', async m => {
                         third.delete(); m.delete();
                         let time = m.content;
 
-                        let fourth = await message.channel.send(embeds.question(`What action will occur if the bot detects the correct number of mentions?`, `s: Server Lockdown\nc: Channel Lockdown\nb: Ban\n k: Kick\nm: Mute\ntm: Tempmute`));
-                        let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ["s", "c", "b", "k", "m", "tm"].includes(m.content), { max: 1 });
+                        let fourth = await message.channel.send(embeds.question(`What action will occur if the bot detects the correct number of mentions?`, `c: Channel Lockdown\nb: Ban\n k: Kick\nm: Mute\ntm: Tempmute`));
+                        let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ["c", "b", "k", "m", "tm"].includes(m.content), { max: 1 });
                         collector.on('collect', async m => {
                             fourth.delete(); m.delete();
                             let action = m.content;
@@ -325,14 +335,18 @@ exports.run = async(client, message, args) => {
                     if(!premiumData) timeMax = 1;
                     else timeMax = 5;
 
-                    let third = await message.channel.send(embeds.question(`In how much time would the bot reset the timer for the amount of mentions?`, `Please provide a time in between **30s and ${timeMax}m.**`));
+                    let timeMaxText;
+                    if(!premiumData) timeMaxText = `Please provide a time in between **30s and ${timeMax}m.**\nTo extend this time, purchase premium with **${guildData.prefix}premium**`;
+                    else timeMaxText = `Please provide a time in between **30s and ${timeMax}m.**`;
+
+                    let third = await message.channel.send(embeds.question(`In how much time would the bot reset the timer for the amount of mentions?`, timeMaxText));
                     let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ms(m.content) >= 30000 && ms(m.content) <= timeMax * 60 * 1000, { max: 1 });
                     collector.on('collect', async m => {
                         third.delete(); m.delete();
                         let time = m.content;
 
-                        let fourth = await message.channel.send(embeds.question(`What action will occur if the bot detects the correct number of mentions?`, `s: Server Lockdown\nc: Channel Lockdown\nb: Ban\n k: Kick\nm: Mute\ntm: Tempmute`));
-                        let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ["s", "c", "b", "k", "m", "tm"].includes(m.content), { max: 1 });
+                        let fourth = await message.channel.send(embeds.question(`What action will occur if the bot detects the correct number of mentions?`, `c: Channel Lockdown\nb: Ban\n k: Kick\nm: Mute\ntm: Tempmute`));
+                        let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ["c", "b", "k", "m", "tm"].includes(m.content), { max: 1 });
                         collector.on('collect', async m => {
                             fourth.delete(); m.delete();
                             let action = m.content;
@@ -474,14 +488,18 @@ exports.run = async(client, message, args) => {
             if(!premiumData) timeMax = 1;
             else timeMax = 5;
 
-            let second = await message.channel.send(embeds.question(`In how much time would the bot reset the timer for the amount of mentions?`, `Please provide a time in between **30s and ${timeMax}m.**`));
+            let timeMaxText;
+            if(!premiumData) timeMaxText = `Please provide a time in between **30s and ${timeMax}m.**\nTo extend this time, purchase premium with **${guildData.prefix}premium**`;
+            else timeMaxText = `Please provide a time in between **30s and ${timeMax}m.**`;
+
+            let second = await message.channel.send(embeds.question(`In how much time would the bot reset the timer for the amount of mentions?`, timeMaxText));
             let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ms(m.content) >= 30000 && ms(m.content) <= timeMax * 60 * 1000, { max: 1 });
             collector.on('collect', async m => {
                 second.delete(); m.delete();
                 let time = m.content;
 
-                let third = await message.channel.send(embeds.question(`What action will occur if the bot detects the correct number of mentions?`, `s: Server Lockdown\nc: Channel Lockdown\nb: Ban\n k: Kick\nm: Mute\ntm: Tempmute`));
-                let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ["s", "c", "b", "k", "m", "tm"].includes(m.content), { max: 1 });
+                let third = await message.channel.send(embeds.question(`What action will occur if the bot detects the correct number of mentions?`, `c: Channel Lockdown\nb: Ban\n k: Kick\nm: Mute\ntm: Tempmute`));
+                let collector = message.channel.createMessageCollector(m => m.author.id === message.author.id && ["c", "b", "k", "m", "tm"].includes(m.content), { max: 1 });
                 collector.on('collect', async m => {
                     third.delete(); m.delete();
                     let action = m.content;
@@ -607,7 +625,6 @@ exports.run = async(client, message, args) => {
 
 function verificationName(type) {
     let x;
-    if(type === `s`) x = `Server Lockdown`;
     if(type === `c`) x = `Channel Lockdown`;
     if(type === `b`) x = `Ban User`;
     if(type === `k`) x = `Kick User`;

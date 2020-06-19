@@ -2,18 +2,19 @@ const Discord = require("discord.js");
 const embeds = require("../utils/embed");
 
 exports.run = async(client, message, args) => {
-    let updateChannel, logChannel, modLogs, lockBypass = ``;
+    let logChannel, modLogs, lockBypass = ``, adminRoles = ``;
     let guildData = await client.models.config.findById(message.guild.id);
-    let options = [`lockbypass`, `updatechannel`, `logchannel`, `modlogs`];
-    
-    if(guildData.updatechannel === 'none') updateChannel = `None`
-    else updateChannel = message.guild.channels.cache.get(guildData.updatechannel);
+    let premiumData = await client.models.premium.findById(message.guild.id);
+    let options = [`lockbypass`, `logchannel`, `modlogs`, `prefix`, `adminrole`];
 
     if(guildData.logchannel === 'none') logChannel = `None`
     else logChannel = message.guild.channels.cache.get(guildData.logchannel);
 
     if(guildData.modlogs === 'none') modLogs = `None`
     else modLogs = message.guild.channels.cache.get(guildData.modlogs);
+
+    if(guildData.adminrole.length <= 0) adminRoles = `None`;
+    else guildData.adminrole.forEach(id => adminRoles += `<@&${id}>\n`);
 
     if((guildData.lockbypass_roles.length + guildData.lockbypass_users.length) <= 0) lockBypass = `None`;
     if(guildData.lockbypass_roles.length > 0) guildData.lockbypass_roles.forEach(id => lockBypass += `<@&${id}>\n`);
@@ -55,16 +56,6 @@ exports.run = async(client, message, args) => {
                     message.channel.send(embeds.complete(`Role ${member} has been added to the lock bypass.`));
                 }
             }
-
-        } else if(args[0] === `updatechannel`) {
-            if(!channel) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}config updatechannel <#channel>`));
-            else {
-                guildData.updatechannel = channel.id;
-                guildData.save();
-                
-                message.channel.send(embeds.complete(`Changed the updates channel to ${channel}!`));
-            }
-
         } else if(args[0] === `logchannel`) {
             if(!channel) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}config logchannel <#channel>`));
             else {
@@ -81,15 +72,40 @@ exports.run = async(client, message, args) => {
                 
                 message.channel.send(embeds.complete(`Changed the updates channel to ${channel}!`));
             }
+        } else if(args[0] === `prefix`) {
+                if(!premiumData) return message.channel.send(embeds.premium(`prefix`))
+                if(!args[1]) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}config prefix <prefix>`));
+
+                guildData.prefix = args[1];
+                guildData.save();
+                
+                message.channel.send(embeds.complete(`Changed the prefix to ${args[1]}!`));
+        } else if(args[0] === `adminrole`) {
+            let role = message.mentions.roles.first();
+            if(role === `undefined`) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}config adminrole <@role>`));
+
+            if(guildData.adminrole.includes(role.id)) {
+                let filter = guildData.adminrole.filter(x => x !== role.id);
+                guildData.adminrole = filter;
+                guildData.save();
+
+                message.channel.send(embeds.complete(`Role ${role} has been removed from the admin roles.`));
+            } else {
+                guildData.adminrole.push(role.id);
+                guildData.save();
+                
+                message.channel.send(embeds.complete(`Role ${role} has been added to the admin roles.`));
+            }
         }
     } else {
         let currentConfig = new Discord.MessageEmbed()
         .setTitle(`Server Settings`)
         .setDescription(`Below are your current config settings.`)
+        .addField(`Prefix`, guildData.prefix)
         .addField(`Lock Bypass`, lockBypass)
-        .addField(`Mog Logs`, modLogs)
-        .addField(`Update Channel`, updateChannel)
+        .addField(`Mod Logs`, modLogs)
         .addField(`Log Channel`, logChannel)
+        .addField(`Admin Roles`, adminRoles)
         .setFooter(client.config.name)
         .setTimestamp()
         .setColor(client.config.color)
