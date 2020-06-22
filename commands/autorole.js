@@ -4,14 +4,13 @@ exports.run = async(client, message, args) => {
     let option = args[0];
     let role = message.mentions.roles.first();
     let guildData = await client.models.config.findById(message.guild.id);
-    let premiumData = await client.models.premium.findById(message.guild.id);
 
     if(!option || !['add', 'list', 'remove'].includes(option)) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}autorole [add, remove, list]`));
     if(['add', 'remove'].includes(option) && !message.mentions.roles.first()) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}autorole [add, remove] <@role>`));
 
     if(option === "add") {
-        if(guildData.autorole.length === 5 && !premiumData) return message.channel.send(embeds.premium(`autorole`))
-        if(!(message.guild.me.hasPermission(["MANAGE_ROLES"]) && role.editable)) return message.channel.send(embeds.error(`The bot does not have sufficient permissions to give that role to users.\n\n**Fix #1.** Move the bot role above the ${role} role.\n**Fix #2.** Give the bot permission to manage other roles.`))
+        if(guildData.autorole.length === 5 && !guildData.premium) return message.channel.send(embeds.premium(`autorole`))
+        if(!(message.guild.me.hasPermission(["MANAGE_ROLES"]) && role.editable)) return message.channel.send(embeds.error(`The bot does not have sufficient permissions to give that role to users.\n\nPlease make sure that:\n**Fix #1.** Move the bot role above the ${role} role.\n**Fix #2.** Give the bot permission to manage other roles.`))
         if(guildData.autorole.includes(role.id)) return message.channel.send(embeds.error(`${role} is already set as an autorole!`));
 
         guildData.autorole.push(role.id);

@@ -6,9 +6,7 @@ module.exports = async (client, message) => {
   if(message.author.bot) return;
 
   let guildData = await client.models.config.findById(message.guild.id);
-  let mentionData = await client.models.mentionspam.findById(message.guild.id);
   let spamData = await client.models.spam.findOne({ user: message.author.id });
-  let repeatData = await client.models.textspam.findById(message.guild.id);
   let messageData = await client.models.spamsg.findOne({ user: message.author.id });
   let userRoles = message.member.roles.cache.array().map(x => x.id), perms = false;
   
@@ -38,8 +36,8 @@ module.exports = async (client, message) => {
       let muterole;
       let time;
 
-        if(type2 === `mention`) time = mentionData.time;
-        else if(type2 === `repeat`) time = repeatData.time;
+        if(type2 === `mention`) time = guildData.mentionspam.time;
+        else if(type2 === `repeat`) time = guildData.textspam.time;
     
         if(!guildData.muterole) {
           try {
@@ -98,16 +96,16 @@ module.exports = async (client, message) => {
   }
 
   if(message.content.indexOf(guildData.prefix) !== 0) {
-    if(mentionData && !perms && message.mentions.roles.array().length >= 0 || !message.mentions.users.array().length >= 0) {
-        if(spamData && spamData.time + mentionData.time <= Date.now()) client.models.spam.deleteOne({ user: message.author.id });
+    if(guildData.mentionspam && !perms && message.mentions.roles.array().length >= 0 || !message.mentions.users.array().length >= 0) {
+        if(spamData && spamData.time + guildData.mentionspam.time <= Date.now()) return client.models.spam.deleteOne({ user: message.author.id });
 
         let roleAmt = message.mentions.roles.array().length;
         let userAmt = message.mentions.users.array().length;
         
-        if(mentionData.type === 'role') {
-          if(spamData && spamData.amount >= mentionData.amount) {
-            if(mentionData.ping !== 'none') message.channel.send(mentionData.ping);
-            action(mentionData.outcome, message.author.id, `mention`);
+        if(guildData.mentionspam.type === 'role') {
+          if(spamData && spamData.amount >= guildData.mentionspam.amount) {
+            if(guildData.mentionspam.ping) message.channel.send(guildData.mentionspam.ping.map(x => `<@&${x}>`));
+            action(guildData.mentionspam.outcome, message.author.id, `mention`);
             return client.models.spam.deleteOne({ user: message.author.id });
           }
 
@@ -115,10 +113,10 @@ module.exports = async (client, message) => {
             spamData.amount = spamData.amount + roleAmt;
             spamData.save();
           } else client.models.spam.create({ user: message.author.id, amount: roleAmt });
-      } else if(mentionData.type === 'user') {
-          if(spamData && spamData.amount >= mentionData.amount) {
-            if(mentionData.ping !== 'none') message.channel.send(mentionData.ping);
-            action(mentionData.outcome, message.author.id, `mention`);
+      } else if(guildData.mentionspam.type === 'user') {
+          if(spamData && spamData.amount >= guildData.mentionspam.amount) {
+            if(guildData.mentionspam.ping) message.channel.send(guildData.mentionspam.ping.map(x => `<@&${x}>`));
+            action(guildData.mentionspam.outcome, message.author.id, `mention`);
             return client.models.spam.deleteOne({ user: message.author.id });
           }
 
@@ -126,10 +124,10 @@ module.exports = async (client, message) => {
             spamData.amount = spamData.amount + userAmt;
             spamData.save();
           } else client.models.spam.create({ user: message.author.id, amount: userAmt });
-      } else if(mentionData.type === 'both') {
-        if(spamData && spamData.amount >= mentionData.amount) {
-          if(mentionData.ping !== 'none') message.channel.send(mentionData.ping);
-          action(mentionData.outcome, message.author.id, `mention`);
+      } else if(guildData.mentionspam.type === 'both') {
+        if(spamData && spamData.amount >= guildData.mentionspam.amount) {
+          if(guildData.mentionspam.ping) message.channel.send(guildData.mentionspam.ping.map(x => `<@&${x}>`));
+          action(guildData.mentionspam.outcome, message.author.id, `mention`);
           return client.models.spam.deleteOne({ user: message.author.id });
         }
 
@@ -138,15 +136,13 @@ module.exports = async (client, message) => {
           spamData.save();
         } else client.models.spam.create({ user: message.author.id, amount: userAmt + roleAmt });
       }
-    }
-
-    if(repeatData && !perms) {
+    } else if(guildData.textspam && !perms) {
       if(!messageData) messageData = client.models.spamsg.create({ user: message.author.id, amount: 1, lastmsg: message.content.toLowerCase() });
-      if(messageData.time + repeatData.time <= Date.now()) client.models.spamsg.deleteOne({ user: message.author.id });
+      if(messageData && messageData.time + guildData.textspam.time <= Date.now()) return client.models.spamsg.deleteOne({ user: message.author.id });
 
-      if(messageData && messageData.amount >= repeatData.amount) {
-        if(repeatData.ping !== 'none') message.channel.send(repeatData.ping);
-        action(repeatData.outcome, message.author.id, `repeat`);
+      if(messageData && messageData.amount >= guildData.textspam.amount) {
+        if(guildData.textspam.ping) message.channel.send(guildData.textspam.ping.map(x => `<@&${x}>`));
+        action(guildData.textspam.outcome, message.author.id, `repeat`);
         return client.models.spamsg.deleteOne({ user: message.author.id });
       }
 
@@ -157,12 +153,12 @@ module.exports = async (client, message) => {
       }
     }
   } else {
-    const cooldownData = await client.models.cooldown.findOne({ user: message.author.id, command: command });
     const args = message.content.slice(guildData.prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
     const cmd = client.commands.get(command);
     if(!cmd) return;
-  
+    
+    const cooldownData = await client.models.cooldown.findOne({ user: message.author.id, command: command });
     if(cooldownData && cooldownData.time < Date.now() && perms) {
         client.models.cooldown.deleteOne({ user: message.author.id, command: command }).exec();
         cmd.run(client, message, args);

@@ -5,7 +5,7 @@ function error(text) {
     let embed = new Discord.MessageEmbed()
     .setColor(config.color)
     .setTitle(`Error`)
-    .setDescription(text + `\n\nJoin support server for further support, ${config.discord_invite}`)
+    .setDescription(text + `\n\nJoin support server [here](${config.discord_invite}).`)
     .setFooter(config.name)
     .setTimestamp()
 

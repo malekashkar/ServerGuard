@@ -2,10 +2,9 @@ const embeds = require("../utils/embed");
 const ms = require("ms");
 
 exports.run = async(client, message, args) => {
-    let premiumData = await client.models.premium.findById(message.guild.id);
     let guildData = await client.models.config.findById(message.guild.id);
     let joinData = await client.models.join.find({});
-    if(!premiumData) return message.channel.send(embeds.premium('join'));
+    if(!guildData.premium) return message.channel.send(embeds.premium('join'));
 
     let time = args[1];
     let options = [`ban`, `kick`, `mute`];

@@ -1,26 +1,19 @@
 const Discord = require("discord.js");
 const client = new Discord.Client({partials: ["MESSAGE", "REACTION", "CHANNEL"]});
-const config = require('./config');
 const Enmap = require("enmap");
 const fs = require("fs");
-const recent = new Set();
+const config = require('./config');
 
 client.commands = new Enmap();
 client.config = config;
-client.recent = recent;
 client.models = {
-  autorole: require('./database/models/autorole'),
   config: require('./database/models/config'),
   cooldown: require('./database/models/cooldown'),
   join: require('./database/models/join'),
-  mentionspam: require('./database/models/mentionspam'),
-  premium: require('./database/models/premium'),
   spam: require('./database/models/spam'),
   spamsg: require('./database/models/spamsg'),
   tempban: require('./database/models/tempban'),
   tempmute: require('./database/models/tempmute'),
-  textspam: require('./database/models/textspam'),
-  verification: require('./database/models/verification'),
 };
 
 fs.readdir("./events/", (err, files) => {
@@ -41,8 +34,6 @@ fs.readdir("./commands/", (err, files) => {
     client.commands.set(commandName, props);
   });
 });
-
-client.login(config.token);
 
 client.on("channelCreate", async channel => {
   if(channel.type === "dm") return;
@@ -96,32 +87,6 @@ client.on("guildBanRemove", async(guild, user) => {
   .setColor(config.color)
   .setTitle(`Member Unbanned`)
   .setDescription(`${user} has been unbanned from the discord server.`)
-  .setTimestamp()
-  logChannel.send(embed);
-});
-
-client.on("guildMemberAdd", async member => {
-  let guildData = await client.models.config.findById(member.guild.id);
-  let logChannel = member.guild.channels.cache.get(guildData.logchannel);
-  if(!logChannel) return;
-  
-  let embed = new Discord.MessageEmbed()
-  .setColor(config.color)
-  .setTitle(`Member Joined`)
-  .setDescription(`${member} joined the discord server.`)
-  .setTimestamp()
-  logChannel.send(embed);
-});
-
-client.on("guildMemberRemove", async member => {
-  let guildData = await client.models.config.findById(member.guild.id);
-  let logChannel = member.guild.channels.cache.get(guildData.logchannel);
-  if(!logChannel) return;
-  
-  let embed = new Discord.MessageEmbed()
-  .setColor(config.color)
-  .setTitle(`Member Left`)
-  .setDescription(`${member} left the discord server.`)
   .setTimestamp()
   logChannel.send(embed);
 });
@@ -209,3 +174,5 @@ client.on("roleDelete", async role => {
   .setTimestamp()
   logChannel.send(embed);
 });
+
+client.login(config.token);

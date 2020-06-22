@@ -4,14 +4,12 @@ exports.run = async(client, message, args) => {
     let guildData = await client.models.config.findById(message.guild.id);
     let limit = args[0];
     
-    if(!isNaN(parseInt(args[0])) || args[0] !== "off") return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}slowmode <time/off>`));
+    console.log(Number.isInteger(Number(limit)))
 
-    if(!isNaN(parseInt(limit))) message.channel.setRateLimitPerUser(parseInt(limit));
-    else if(limit === "off") message.channel.setRateLimitPerUser(0);
+    if(!Number.isInteger(parseInt(args[0])) && args[0] !== "off") return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}slowmode <time/off>`));
 
-    let option;
-    if(!isNaN(parseInt(limit))) option = `${limit}s`;
-    else if(limit === "off") option = `off`
+    if(Number.isInteger(Number(limit))) message.channel.setRateLimitPerUser(Number(limit));
+    else message.channel.setRateLimitPerUser(0);
 
-    message.channel.send(embeds.complete(`Slowmode in channel ${message.channel} set to: **${option}**`));
+    message.channel.send(embeds.complete(`Slowmode in channel ${message.channel} set to: **${Number.isInteger(Number(limit)) ? Number(limit) : `off`}**`));
 }

@@ -3,14 +3,13 @@ module.exports = async(client, reaction, user) => {
     if(reaction.message.partial) reaction.message.fetch();
     
     let message = reaction.message;
-    let verData = await client.models.verification.findById(message.guild.id);
+    let guildData = await client.models.config.findById(message.guild.id);
     
-    /* Verification */
-    if(!verData) return;
-    if(message.id === verData.message && reaction.emoji.name === "✅") {
+    if(guildData.verification && message.id === guildData.verification.message && reaction.emoji.name === "✅") {
         reaction.users.remove(user);
-        let role = message.guild.roles.cache.get(verData.role);
+
         let member = message.guild.members.cache.get(user.id);
-        member.roles.add(role);
+        member.roles.add(guildData.verification.verified);
+        member.roles.remove(guildData.verification.unverified);
     }
 }

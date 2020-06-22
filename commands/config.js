@@ -4,8 +4,7 @@ const embeds = require("../utils/embed");
 exports.run = async(client, message, args) => {
     let logChannel, modLogs, lockBypass = ``, adminRoles = ``;
     let guildData = await client.models.config.findById(message.guild.id);
-    let premiumData = await client.models.premium.findById(message.guild.id);
-    let options = [`lockbypass`, `logchannel`, `modlogs`, `prefix`, `adminrole`];
+    let options = [`lockbypass`, `logchannel`, `modlogs`, `prefix`, `adminrole`, `punishdm`];
 
     if(guildData.logchannel === 'none') logChannel = `None`
     else logChannel = message.guild.channels.cache.get(guildData.logchannel);
@@ -73,7 +72,6 @@ exports.run = async(client, message, args) => {
                 message.channel.send(embeds.complete(`Changed the updates channel to ${channel}!`));
             }
         } else if(args[0] === `prefix`) {
-                if(!premiumData) return message.channel.send(embeds.premium(`prefix`))
                 if(!args[1]) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}config prefix <prefix>`));
 
                 guildData.prefix = args[1];
@@ -96,6 +94,15 @@ exports.run = async(client, message, args) => {
                 
                 message.channel.send(embeds.complete(`Role ${role} has been added to the admin roles.`));
             }
+        } else if(args[0] === `punishdm`) {
+            if(!['on', 'off'].includes(args[1])) return message.channel.send(embeds.error(`**Usage:** ${guildData.prefix}config punishdm <on/off>`));
+            else {
+                let option = args[1] === 'on';
+                guildData.dmlogs = option;
+                guildData.save();
+                
+                message.channel.send(embeds.complete(`You have turned ${args[1] === 'on' ? 'on' : 'off'} dm punishment logs.`));
+            }
         }
     } else {
         let currentConfig = new Discord.MessageEmbed()
@@ -106,6 +113,7 @@ exports.run = async(client, message, args) => {
         .addField(`Mod Logs`, modLogs)
         .addField(`Log Channel`, logChannel)
         .addField(`Admin Roles`, adminRoles)
+        .addField(`DM Punishments`, guildData.dmlogs ? 'On' : 'Off')
         .setFooter(client.config.name)
         .setTimestamp()
         .setColor(client.config.color)
